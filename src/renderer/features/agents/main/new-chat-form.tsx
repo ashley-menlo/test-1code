@@ -226,6 +226,11 @@ export function NewChatForm({
   const [mentionSearchText, setMentionSearchText] = useState("")
   const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 })
 
+  // Mention subpage navigation state
+  const [showingFilesList, setShowingFilesList] = useState(false)
+  const [showingSkillsList, setShowingSkillsList] = useState(false)
+  const [showingAgentsList, setShowingAgentsList] = useState(false)
+
   // Slash command dropdown state
   const [showSlashDropdown, setShowSlashDropdown] = useState(false)
   const [slashSearchText, setSlashSearchText] = useState("")
@@ -666,8 +671,29 @@ export function NewChatForm({
   ])
 
   const handleMentionSelect = useCallback((mention: FileMentionOption) => {
+    // Category navigation - enter subpage instead of inserting mention
+    if (mention.type === "category") {
+      if (mention.id === "files") {
+        setShowingFilesList(true)
+        return
+      }
+      if (mention.id === "skills") {
+        setShowingSkillsList(true)
+        return
+      }
+      if (mention.id === "agents") {
+        setShowingAgentsList(true)
+        return
+      }
+    }
+
+    // Otherwise: insert mention as normal
     editorRef.current?.insertMention(mention)
     setShowMentionDropdown(false)
+    // Reset subpage state
+    setShowingFilesList(false)
+    setShowingSkillsList(false)
+    setShowingAgentsList(false)
   }, [])
 
   // Save draft to localStorage when content changes
@@ -728,6 +754,10 @@ export function NewChatForm({
       if (validatedProject) {
         setMentionSearchText(searchText)
         setMentionPosition({ top: rect.top, left: rect.left })
+        // Reset subpage state when opening dropdown
+        setShowingFilesList(false)
+        setShowingSkillsList(false)
+        setShowingAgentsList(false)
         setShowMentionDropdown(true)
       }
     },
@@ -736,6 +766,10 @@ export function NewChatForm({
 
   const handleCloseTrigger = useCallback(() => {
     setShowMentionDropdown(false)
+    // Reset subpage state when closing
+    setShowingFilesList(false)
+    setShowingSkillsList(false)
+    setShowingAgentsList(false)
   }, [])
 
   // Slash command handlers
@@ -908,7 +942,7 @@ export function NewChatForm({
         </div>
       </div>
 
-      <div className="flex flex-1 items-center justify-center overflow-y-auto relative">
+      <div className="flex flex-1 items-center justify-center overflow-y-auto relative pb-16">
         <div className="w-full max-w-2xl space-y-4 md:space-y-6 relative z-10 px-4">
           {/* Title - only show when project is selected */}
           {validatedProject && (
@@ -1397,11 +1431,20 @@ export function NewChatForm({
                 {/* Desktop: use projectPath for local file search */}
                 <AgentsFileMention
                   isOpen={showMentionDropdown && !!validatedProject}
-                  onClose={() => setShowMentionDropdown(false)}
+                  onClose={() => {
+                    setShowMentionDropdown(false)
+                    // Reset subpage state when dropdown closes
+                    setShowingFilesList(false)
+                    setShowingSkillsList(false)
+                    setShowingAgentsList(false)
+                  }}
                   onSelect={handleMentionSelect}
                   searchText={mentionSearchText}
                   position={mentionPosition}
                   projectPath={validatedProject?.path}
+                  showingFilesList={showingFilesList}
+                  showingSkillsList={showingSkillsList}
+                  showingAgentsList={showingAgentsList}
                 />
 
                 {/* Slash command dropdown */}

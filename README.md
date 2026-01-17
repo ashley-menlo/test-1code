@@ -6,6 +6,8 @@ Best UI for Claude Code with local and remote agent execution.
 
 By [21st.dev](https://21st.dev) team
 
+> **Note:** Currently tested on macOS and Linux. Windows support is experimental and may have issues.
+
 ## Features
 
 - **Plan & Agent Modes** - Read-only analysis or full code execution permissions
