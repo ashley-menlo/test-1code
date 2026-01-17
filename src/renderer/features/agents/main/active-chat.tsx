@@ -3041,7 +3041,7 @@ function ChatViewInner({
                   isDragOver && "ring-2 ring-primary/50 border-primary/50",
                   isFocused && !isDragOver && "ring-2 ring-primary/50",
                 )}
-                maxHeight={240}
+                maxHeight={200}
                 onSubmit={handleSend}
                 contextItems={
                   images.length > 0 || files.length > 0 ? (
@@ -3110,7 +3110,7 @@ function ChatViewInner({
                     onShiftTab={() => setIsPlanMode((prev) => !prev)}
                     placeholder="Plan, @ for context, / for commands"
                     className={cn(
-                      "bg-transparent max-h-[240px] overflow-y-auto p-1",
+                      "bg-transparent max-h-[200px] overflow-y-auto p-1",
                       isMobile && "min-h-[56px]",
                     )}
                     onPaste={handlePaste}
@@ -3380,7 +3380,7 @@ function ChatViewInner({
                           className="h-7 gap-1.5 rounded-lg"
                         >
                           Implement plan
-                          <Kbd className="text-primary-foreground/80">
+                          <Kbd className="text-primary-foreground/70">
                             ⌘↵
                           </Kbd>
                         </Button>
